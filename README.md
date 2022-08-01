@@ -2,7 +2,7 @@ Administrative:
 Team Name: Taxes
 Team Members: Ibet Gonzalez Viltres, Mohammad Immam, Ryan Kolb
 GitHub URL: https://github.com/MohammadEImmam/TaxDataProgram
-Link to Video:
+Link to Video: https://www.youtube.com/watch?v=-9u8hJ8bH1Y&ab_channel=IbetGonzalez
 
 Redefined Proposal:
 

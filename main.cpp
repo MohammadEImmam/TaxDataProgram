@@ -39,7 +39,7 @@ void ReadFile(BTree &data)
         vector<int> paidAmountV;
         vector<int> incomeTaxV;
 
-    //NOTE: CHECK IF THE VERY LAST VALUE GETS INSERTED CORRECTLY!!!
+        //NOTE: CHECK IF THE VERY LAST VALUE GETS INSERTED CORRECTLY!!!
         while(file.eof() == false)
         {
             getline(file, state, ',');
@@ -49,10 +49,10 @@ void ReadFile(BTree &data)
             getline(file, incomeTax);
 
             int zip = stoi(zipString);
-           
-           //If it is not the first zip in the function
+
+            //If it is not the first zip in the function
             if(prevZip != -1)
-            { 
+            {
                 //If the previous zip or previous state is not the same as the current
                 if(prevZip != zip || prevState != state)
                 {
@@ -64,8 +64,8 @@ void ReadFile(BTree &data)
                     incomeTaxV.clear();
                 }
             }
-           
-           //Always add info to the tree
+
+            //Always add info to the tree
             int gI = stoi(grossIncome);
             int pA = stoi(paidAmount);
             int iT = stoi(incomeTax);
@@ -73,13 +73,13 @@ void ReadFile(BTree &data)
             grossIncomeV.push_back(gI);
             paidAmountV.push_back(pA);
             incomeTaxV.push_back(iT);
-        
+
             prevZip = zip;
             prevState = state;
         }
 
-      cout << "Loading Data Complete." << endl;
-      cout << endl;
+        cout << "Loading Data Complete." << endl;
+        cout << endl;
     }
     else
     {
@@ -105,7 +105,7 @@ double FindMedianHeap(vector<int> info)
         double infoInt = (double) info.at(i);
 
         //Adding data into the trees
-        if(minSize == 0 || infoInt < maxTree.GetHead())
+        if(maxSize == 0 || infoInt < maxTree.GetHead())
         {
             //Insert info into max tree
             maxTree.Insert(infoInt);
@@ -124,12 +124,16 @@ double FindMedianHeap(vector<int> info)
             /*If the max tree is greater  then place the
             root of the max tree into the min tree*/
             minTree.Insert(maxTree.Extract());
+            maxSize--;
+            minSize++;
         }
         else if(minSize > maxSize &&(minSize - maxSize) == 2)
         {
             /*If the min tree is greater  then place the
             root of the min tree into the max tree*/
             maxTree.Insert(minTree.Extract());
+            minSize--;
+            maxSize++;
         }
     }
 
@@ -164,36 +168,24 @@ double FindMedianB(zipNode z, bool type)
         info = z.getTaxesPaid();
     }
 
+    sort(info.begin(), info.end());
+
     int size = info.size();
 
     if(size % 2 == 0)
-    {
-        //An odd amount of values
-        size /= 2;
-        median = info.at(size);
-    }
-    else
     {
         //An even amount of values;
         size /= 2;
         median = (info.at(size) + info.at(size + 1))/ 2;
     }
-
-    return median;
-}
-
-double FindAverage(vector<int> info)
-{
-    double sum = 0;
-    double amount = 0;
-
-    for(int i = 0; i < info.size(); i++)
+    else
     {
-        sum += (double) info.at(i);
-        amount++;
+        //An odd amount of values
+        size /= 2;
+        median = info.at(size);
     }
 
-    return sum/amount;
+    return median;
 }
 
 double FindAverageB(zipNode z, bool type)
@@ -250,12 +242,12 @@ double FindAverageHeap(vector<int> info)
 
 bool ZipSize(string zip)
 {
-	if (zip.size() != 5)
-	{
-		return false;
-	}
+    if (zip.size() != 5)
+    {
+        return false;
+    }
 
-	return true;
+    return true;
 }
 
 bool StateAbrevitaion(string state)
@@ -275,16 +267,16 @@ int main()
 
     bool continueProgram = true;
 
-	cout << setw(52) << "Welcome to the Tax Data Program!" << endl;
-	cout << setw(64) << "*This program will provide you with data of your taxes*" << endl;
-	cout << setw(59) << "All that is needed is your zip code and state" << endl;
+    cout << setw(52) << "Welcome to the Tax Data Program!" << endl;
+    cout << setw(64) << "*This program will provide you with data of your taxes*" << endl;
+    cout << setw(59) << "All that is needed is your zip code and state" << endl;
 
     while(continueProgram == true)
     {
         cout << endl;
         cout <<  setfill(' ') << setw(73);
-	    cout << setw(47) << "Tax Data Program Menu" << endl;
-	    cout << setfill('-') << setw(73) << "-" << endl;
+        cout << setw(47) << "Tax Data Program Menu" << endl;
+        cout << setfill('-') << setw(73) << "-" << endl;
 
         cout <<  setfill(' ');
 
@@ -325,13 +317,13 @@ int main()
         if(data.searchBool(zip) == false)
         {
             cout << setw(62) << "Sorry but that zip code is not within this data base" << endl;
-	        cout << setw(44) << "Please try agian" << endl;
+            cout << setw(44) << "Please try agian" << endl;
         }
-        //Find the State
+            //Find the State
         else if(z.getState() != state)
         {
             cout << setw(73) << "Sorry but the zip code and state combination is not within this data base" << endl;
-	        cout << setw(44) << "Please try agian" << endl;
+            cout << setw(44) << "Please try agian" << endl;
         }
         else
         {
@@ -342,7 +334,7 @@ int main()
             cin >> choice;
 
 
-             //First get the needed values -> no need to place all the whole data structure in the funciton
+            //First get the needed values -> no need to place all the whole data structure in the funciton
             vector<int> grossIncomeV = z.getGrossInc();
             vector<int> paidAmountV = z.getTaxesPaid();
 

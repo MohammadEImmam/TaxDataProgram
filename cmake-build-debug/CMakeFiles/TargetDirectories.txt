@@ -1,0 +1,3 @@
+C:/Users/esfar/CLionProjects/taxes/TaxDataProgram/cmake-build-debug/CMakeFiles/taxes.dir
+C:/Users/esfar/CLionProjects/taxes/TaxDataProgram/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Users/esfar/CLionProjects/taxes/TaxDataProgram/cmake-build-debug/CMakeFiles/rebuild_cache.dir

@@ -88,7 +88,7 @@ void ReadFile(BTree &data)
 
 }
 
-double FindMedian(vector<int> info)
+double FindMedianHeap(vector<int> info)
 {
     //Refrenced from the Heaps module - Heaps.pdf - slides 63-80
     int capacity = info.size();
@@ -99,7 +99,7 @@ double FindMedian(vector<int> info)
     //Make a max tree
     BinaryHeap maxTree(capacity, true);
     int maxSize = 0;
-    
+
     for(int i = 0; i < info.size(); i++)
     {
         double infoInt = (double) info.at(i);
@@ -121,13 +121,13 @@ double FindMedian(vector<int> info)
         //Balancing the trees
         if(maxSize > minSize && (maxSize - minSize) == 2)
         {
-            /*If the max tree is greater  then place the 
+            /*If the max tree is greater  then place the
             root of the max tree into the min tree*/
             minTree.Insert(maxTree.Extract());
         }
         else if(minSize > maxSize &&(minSize - maxSize) == 2)
         {
-            /*If the min tree is greater  then place the 
+            /*If the min tree is greater  then place the
             root of the min tree into the max tree*/
             maxTree.Insert(minTree.Extract());
         }
@@ -149,6 +149,39 @@ double FindMedian(vector<int> info)
     return maxTree.GetHead();
 }
 
+double FindMedianB(zipNode z, bool type)
+{
+    double median;
+    vector<int> info;
+    if(type == true)
+    {
+        //Find median for grossIncome
+        info = z.getGrossInc();
+    }
+    else
+    {
+        //Find median for taxes paid
+        info = z.getTaxesPaid();
+    }
+
+    int size = info.size();
+
+    if(size % 2 == 0)
+    {
+        //An odd amount of values
+        size /= 2;
+        median = info.at(size);
+    }
+    else
+    {
+        //An even amount of values;
+        size /= 2;
+        median = (info.at(size) + info.at(size + 1))/ 2;
+    }
+
+    return median;
+}
+
 double FindAverage(vector<int> info)
 {
     double sum = 0;
@@ -161,6 +194,58 @@ double FindAverage(vector<int> info)
     }
 
     return sum/amount;
+}
+
+double FindAverageB(zipNode z, bool type)
+{
+    double sum = 0;
+    double amount = 0;
+    vector<int> info;
+    if(type == true)
+    {
+        //Find median for grossIncome
+        info = z.getGrossInc();
+    }
+    else
+    {
+        //Find median for taxes paid
+        info = z.getTaxesPaid();
+    }
+
+    for(int i = 0; i < info.size(); i++)
+    {
+        sum += (double) info.at(i);
+        amount++;
+    }
+
+    return sum/amount;
+}
+
+double FindAverageHeap(vector<int> info)
+{
+    int capacity = info.size();
+
+    //Make a min tree
+    BinaryHeap minTree(capacity, false);
+    int minSize = 0;
+
+    //Placing info into min heap
+    for(int i = 0; i < info.size(); i++)
+    {
+        minTree.Insert(info.at(i));
+    }
+
+    double sum = 0;
+
+    //Place data into sum
+    for(int i = 0; i < capacity; i++)
+    {
+        sum += (double) minTree.Extract();
+    }
+
+    sum /= capacity;
+
+    return sum;
 }
 
 bool ZipSize(string zip)
@@ -250,16 +335,44 @@ int main()
         }
         else
         {
+            int choice;
+            cout << setw(65)<< "Choose a data structure that will perform the calculations" << endl;
+            cout << setw(43) << "1. Binary Heap" << endl;
+            cout << setw(39) << "2. B+ Tree" << endl;
+            cin >> choice;
+
+
              //First get the needed values -> no need to place all the whole data structure in the funciton
             vector<int> grossIncomeV = z.getGrossInc();
             vector<int> paidAmountV = z.getTaxesPaid();
 
-            double avgGrossIncome = FindAverage(grossIncomeV);
-            double avgTaxesPaid = FindAverage(paidAmountV);
-            double medianGrossIncome = FindMedian(grossIncomeV);
-            double medianTaxesPaid = FindMedian(paidAmountV);
+            double avgGrossIncome;
+            double avgTaxesPaid;
+            double medianGrossIncome;
+            double medianTaxesPaid;
+
+            string dataType;
+            if(choice == 1)
+            {
+                //Heap
+                avgGrossIncome = FindAverageHeap(grossIncomeV);
+                avgTaxesPaid = FindAverageHeap(paidAmountV);
+                medianGrossIncome = FindMedianHeap(grossIncomeV);
+                medianTaxesPaid = FindMedianHeap(paidAmountV);
+                dataType = "Binary Heap";
+            }
+            else if(choice == 2)
+            {
+                //B+ tree
+                avgGrossIncome = FindAverageB(z, true);
+                avgTaxesPaid = FindAverageB(z, false);
+                medianGrossIncome = FindMedianB(z, true);
+                medianTaxesPaid = FindMedianB(z, false);
+                dataType = "B+ Tree";
+            }
+
             cout << endl;
-            cout << setw(37) << "Tax Data for " << zipString << ", " << state << endl;
+            cout << setw(27) << "Tax Data for " << zipString << ", " << state << " using a " << dataType << endl;
             cout << setfill('-') << setw(73) << "-" << endl;
             cout << setfill(' ');
             cout << setw(39) << "Avg Gross Income: $" << avgGrossIncome << endl;
